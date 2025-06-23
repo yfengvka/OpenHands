@@ -5,9 +5,9 @@ import { code } from "../markdown/code";
 import { cn } from "#/utils/utils";
 import { ul, ol } from "../markdown/list";
 import { CopyToClipboardButton } from "#/components/shared/buttons/copy-to-clipboard-button";
-import { anchor } from "../markdown/anchor";
+import { Anchor } from "../markdown/anchor";
 import { OpenHandsSourceType } from "#/types/core/base";
-import { paragraph } from "../markdown/paragraph";
+import { Paragraph } from "../markdown/paragraph";
 
 interface ChatMessageProps {
   type: OpenHandsSourceType;
@@ -65,8 +65,8 @@ export function ChatMessage({
             code,
             ul,
             ol,
-            a: anchor,
-            p: paragraph,
+            a: Anchor,
+            p: Paragraph,
           }}
           remarkPlugins={[remarkGfm]}
         >

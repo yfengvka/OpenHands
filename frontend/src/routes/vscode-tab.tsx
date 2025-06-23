@@ -14,9 +14,12 @@ function VSCodeTab() {
   const { curAgentState } = useSelector((state: RootState) => state.agent);
   // Placeholder: These would come from the new ideSlice in Redux
   const { targetFilePathInVSCode, forceReloadKey } = useSelector(
-    (state: RootState) => state.ide || { targetFilePathInVSCode: null, forceReloadKey: 0 }, // Provide default if ide slice doesn't exist yet
+    (state: RootState) =>
+      state.ide || { targetFilePathInVSCode: null, forceReloadKey: 0 }, // Provide default if ide slice doesn't exist yet
   );
-  const [effectiveIframeSrc, setEffectiveIframeSrc] = useState<string | null>(null);
+  const [effectiveIframeSrc, setEffectiveIframeSrc] = useState<string | null>(
+    null,
+  );
   const isRuntimeInactive = RUNTIME_INACTIVE_STATES.includes(curAgentState);
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const [isCrossProtocol, setIsCrossProtocol] = useState(false);
@@ -46,7 +49,7 @@ function VSCodeTab() {
         // Ensure the base URL doesn't already have a file parameter that might conflict
         // A more robust URL manipulation might be needed if complex query params exist
         // Also, consider using URLSearchParams for cleaner query param addition
-        if (finalUrl.includes('?')) {
+        if (finalUrl.includes("?")) {
           finalUrl += `&file=${encodeURIComponent(targetFilePathInVSCode)}`;
         } else {
           finalUrl += `?file=${encodeURIComponent(targetFilePathInVSCode)}`;
@@ -116,7 +119,11 @@ function VSCodeTab() {
     <div className="h-full w-full">
       <iframe
         ref={iframeRef}
-        key={effectiveIframeSrc ? `${effectiveIframeSrc}_${forceReloadKey}` : 'vscode-iframe-key'}
+        key={
+          effectiveIframeSrc
+            ? `${effectiveIframeSrc}_${forceReloadKey}`
+            : "vscode-iframe-key"
+        }
         title={t(I18nKey.VSCODE$TITLE)}
         src={effectiveIframeSrc || ""}
         className="w-full h-full border-0"

@@ -10,6 +10,7 @@ export function Paragraph({
   React.HTMLAttributes<HTMLParagraphElement> &
   ExtraProps) {
   return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
     <p {...props} className="pb-[10px] last:pb-0">
       {children}
     </p>
