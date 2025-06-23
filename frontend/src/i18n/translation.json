@@ -9679,4 +9679,21 @@
         "de": "Feedback konnte nicht gesendet werden",
         "uk": "Не вдалося надіслати відгук"
     }
+,
+    "VSCODE$OPEN_FILE_IN_EDITOR_TITLE": {
+        "en": "Open {{filePath}} in editor",
+        "ja": "Open {{filePath}} in editor",
+        "zh-CN": "Open {{filePath}} in editor",
+        "zh-TW": "Open {{filePath}} in editor",
+        "ko-KR": "Open {{filePath}} in editor",
+        "no": "Open {{filePath}} in editor",
+        "ar": "Open {{filePath}} in editor",
+        "de": "Open {{filePath}} in editor",
+        "fr": "Open {{filePath}} in editor",
+        "it": "Open {{filePath}} in editor",
+        "pt": "Open {{filePath}} in editor",
+        "es": "Open {{filePath}} in editor",
+        "tr": "Open {{filePath}} in editor",
+        "uk": "Open {{filePath}} in editor"
+    }
 }

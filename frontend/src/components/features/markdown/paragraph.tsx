@@ -1,11 +1,17 @@
 import React from "react";
 import { ExtraProps } from "react-markdown";
 
-// Custom component to render <p> in markdown with bottom padding
-export function paragraph({
+export function Paragraph({
   children,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  node, // node is part of the react-markdown API for custom renderers, keep it for API compatibility
+  ...props
 }: React.ClassAttributes<HTMLParagraphElement> &
   React.HTMLAttributes<HTMLParagraphElement> &
   ExtraProps) {
-  return <p className="pb-[10px] last:pb-0">{children}</p>;
+  return (
+    <p {...props} className="pb-[10px] last:pb-0">
+      {children}
+    </p>
+  );
 }

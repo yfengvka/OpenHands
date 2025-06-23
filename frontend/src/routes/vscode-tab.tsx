@@ -6,11 +6,17 @@ import { RootState } from "#/store";
 import { RUNTIME_INACTIVE_STATES } from "#/types/agent-state";
 import { useVSCodeUrl } from "#/hooks/query/use-vscode-url";
 import { VSCODE_IN_NEW_TAB } from "#/utils/feature-flags";
+// Placeholder: This Redux action/slice would need to be created by a developer
 
 function VSCodeTab() {
   const { t } = useTranslation();
   const { data, isLoading, error } = useVSCodeUrl();
   const { curAgentState } = useSelector((state: RootState) => state.agent);
+  // Placeholder: These would come from the new ideSlice in Redux
+  const { targetFilePathInVSCode, forceReloadKey } = useSelector(
+    (state: RootState) => state.ide || { targetFilePathInVSCode: null, forceReloadKey: 0 }, // Provide default if ide slice doesn't exist yet
+  );
+  const [effectiveIframeSrc, setEffectiveIframeSrc] = useState<string | null>(null);
   const isRuntimeInactive = RUNTIME_INACTIVE_STATES.includes(curAgentState);
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const [isCrossProtocol, setIsCrossProtocol] = useState(false);
@@ -32,6 +38,27 @@ function VSCodeTab() {
       }
     }
   }, [data?.url]);
+
+  useEffect(() => {
+    if (data?.url) {
+      let finalUrl = data.url;
+      if (targetFilePathInVSCode) {
+        // Ensure the base URL doesn't already have a file parameter that might conflict
+        // A more robust URL manipulation might be needed if complex query params exist
+        // Also, consider using URLSearchParams for cleaner query param addition
+        if (finalUrl.includes('?')) {
+          finalUrl += `&file=${encodeURIComponent(targetFilePathInVSCode)}`;
+        } else {
+          finalUrl += `?file=${encodeURIComponent(targetFilePathInVSCode)}`;
+        }
+      }
+      setEffectiveIframeSrc(finalUrl);
+    } else {
+      setEffectiveIframeSrc(null);
+    }
+    // forceReloadKey is included to ensure this effect runs even if other dependencies haven't changed,
+    // allowing a re-trigger of iframe loading if needed.
+  }, [data?.url, targetFilePathInVSCode, forceReloadKey]);
 
   const handleOpenInNewTab = () => {
     if (data?.url) {
@@ -89,8 +116,9 @@ function VSCodeTab() {
     <div className="h-full w-full">
       <iframe
         ref={iframeRef}
+        key={effectiveIframeSrc ? `${effectiveIframeSrc}_${forceReloadKey}` : 'vscode-iframe-key'}
         title={t(I18nKey.VSCODE$TITLE)}
-        src={data.url}
+        src={effectiveIframeSrc || ""}
         className="w-full h-full border-0"
         allow="clipboard-read; clipboard-write"
       />

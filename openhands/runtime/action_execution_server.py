@@ -992,32 +992,39 @@ if __name__ == '__main__':
 
             entries = os.listdir(full_path)
 
-            # Separate directories and files
-            directories = []
-            files = []
-            for entry in entries:
-                # Remove leading slash and any parent directory components
-                entry_relative = entry.lstrip('/').split('/')[-1]
+            structured_entries = []
+            for entry_name in entries:  # entries is from os.listdir(full_path)
+                current_full_entry_path = os.path.join(full_path, entry_name)
 
-                # Construct the full path by joining the base path with the relative entry path
-                full_entry_path = os.path.join(full_path, entry_relative)
-                if os.path.exists(full_entry_path):
-                    is_dir = os.path.isdir(full_entry_path)
-                    if is_dir:
-                        # add trailing slash to directories
-                        # required by FE to differentiate directories and files
-                        entry = entry.rstrip('/') + '/'
-                        directories.append(entry)
-                    else:
-                        files.append(entry)
+                # This check might be redundant if os.listdir() guarantees existence for entries it returns,
+                # but it's a safe check.
+                if not os.path.exists(current_full_entry_path):
+                    continue
 
-            # Sort directories and files separately
-            directories.sort(key=lambda s: s.lower())
-            files.sort(key=lambda s: s.lower())
+                is_dir = os.path.isdir(current_full_entry_path)
 
-            # Combine sorted directories and files
-            sorted_entries = directories + files
-            return JSONResponse(content=sorted_entries)
+                # Calculate path relative to the workspace root (client.initial_cwd)
+                # This path will be used by the frontend to tell VSCode which file to open.
+                path_in_workspace = os.path.relpath(
+                    current_full_entry_path, client.initial_cwd
+                )
+                # Normalize path separators for web/cross-platform consistency
+                path_in_workspace = path_in_workspace.replace(os.sep, '/')
+
+                structured_entries.append(
+                    {
+                        'name': entry_name,  # entry_name is the basename
+                        'path': path_in_workspace,  # path relative to workspace root
+                        'isDirectory': is_dir,
+                    }
+                )
+
+            # Sort: directories first, then files, both alphabetically by name
+            structured_entries.sort(
+                key=lambda x: (not x['isDirectory'], x['name'].lower())
+            )
+
+            return JSONResponse(content=structured_entries)
 
         except Exception as e:
             logger.error(f'Error listing files: {e}')
