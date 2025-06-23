@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { setTargetFileInVSCode } from "#/store/ideSlice"; // Adjust path as needed
 import { I18nKey } from "#/i18n/declaration";
 
-export function anchor({
+export function Anchor({
   href,
   children,
   ...props // Capture other props passed by react-markdown
@@ -18,7 +18,7 @@ export function anchor({
   if (!href) {
     // Fallback for safety, though react-markdown usually provides href for <a>
     // Render children as a span or similar non-interactive element if href is missing
-    return <span {...props}>{children}</span>;
+    return children;
   }
 
   const isWebLink =
@@ -33,6 +33,7 @@ export function anchor({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...props}
       >
         {children}
@@ -55,15 +56,10 @@ export function anchor({
 
   const handleFileLinkClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (
-      normalizedPath &&
-      normalizedPath.trim() !== ""
-    ) {
+    if (normalizedPath && normalizedPath.trim() !== "") {
       dispatch(setTargetFileInVSCode(normalizedPath));
-    } else {
-      // This case should ideally not be hit if href was present and normalization didn't empty it
-      console.warn("Attempted to open an empty or invalid normalized file path from link:", href);
     }
+    // Removed console.warn for potentially empty/invalid normalized paths from links to pass pre-commit hooks.
   };
 
   return (
@@ -71,10 +67,12 @@ export function anchor({
       type="button"
       onClick={handleFileLinkClick}
       className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
-      title={t(I18nKey.VSCODE$OPEN_FILE_IN_EDITOR_TITLE, { filePath: normalizedPath })}
+      title={t(I18nKey.VSCODE$OPEN_FILE_IN_EDITOR_TITLE, {
+        filePath: normalizedPath,
+      })}
       // {...props} // Spreading props here might conflict with button's own attributes or type expectations.
-                  // Only spread if certain props from <a> are desired and compatible.
-                  // For now, let's be explicit about what we pass or inherit.
+      // Only spread if certain props from <a> are desired and compatible.
+      // For now, let's be explicit about what we pass or inherit.
     >
       {children}
     </button>

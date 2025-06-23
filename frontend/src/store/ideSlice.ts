@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IdeState {
   targetFilePathInVSCode: string | null;
@@ -11,7 +11,7 @@ const initialState: IdeState = {
 };
 
 const ideSlice = createSlice({
-  name: 'ide',
+  name: "ide",
   initialState,
   reducers: {
     setTargetFileInVSCode(state, action: PayloadAction<string | null>) {
