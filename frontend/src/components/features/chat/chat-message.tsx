@@ -1,7 +1,7 @@
 import React from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { code } from "../markdown/code";
+import { Code } from "../markdown/code";
 import { cn } from "#/utils/utils";
 import { ul, ol } from "../markdown/list";
 import { CopyToClipboardButton } from "#/components/shared/buttons/copy-to-clipboard-button";
@@ -62,7 +62,7 @@ export function ChatMessage({
       <div className="text-sm break-words">
         <Markdown
           components={{
-            code,
+            code: Code,
             ul,
             ol,
             a: Anchor,

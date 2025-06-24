@@ -9,6 +9,7 @@ import { jupyterReducer } from "./state/jupyter-slice";
 import securityAnalyzerReducer from "./state/security-analyzer-slice";
 import statusReducer from "./state/status-slice";
 import metricsReducer from "./state/metrics-slice";
+import ideReducer from "./ideSlice"; // Added for clickable file paths
 
 export const rootReducer = combineReducers({
   fileState: fileStateReducer,
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
   securityAnalyzer: securityAnalyzerReducer,
   status: statusReducer,
   metrics: metricsReducer,
+  ide: ideReducer, // Added for clickable file paths
 });
 
 const store = configureStore({
